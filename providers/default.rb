@@ -57,6 +57,8 @@ action :install do
   end
 
   # don't have a need yet to template these files
+  # set to create_if_missing to allow management via wrapper cookbook with minimal
+  # impact to existing functionality. deleting file on node will re-drop it, if unmanaged in wrapper
   %w{ catalina.policy catalina.properties logging.properties context.xml tomcat-users.xml }.each do |tc_file|
     cookbook_file "#{new_resource.base}/conf/#{tc_file}" do
       cookbook "tomcat"
@@ -64,7 +66,7 @@ action :install do
       mode "0775"
       owner new_resource.user
       group new_resource.user
-      action :create
+      action :create_if_missing
     end
   end
 
