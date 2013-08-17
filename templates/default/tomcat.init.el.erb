@@ -49,8 +49,9 @@ else
     SU="/bin/su - "
 fi
 
-# Define the tomcat username
-TOMCAT_USER="${TOMCAT_USER:-tomcat}"
+# Define the tomcat username & group
+TOMCAT_USER="${TOMCAT_USER:-<%= @user %>}"
+TOMCAT_GROUP="${TOMCAT_GROUP:-<%= @group %>}"
 
 # Define path to run command that starts application from
 # some crappily written applications use hardcoded relative paths
@@ -138,7 +139,7 @@ function start() {
   
   $SU "$TOMCAT_USER" -c "touch $CATALINA_OUT"
   touch "$CATALINA_PID"
-  chown "$TOMCAT_USER":"$TOMCAT_USER" "$CATALINA_PID"
+  chown "$TOMCAT_USER":"$TOMCAT_GROUP" "$CATALINA_PID"
   run_java_cmd=$(cat <<EOF
 "$_RUNJAVA" "$LOGGING_CONFIG" $JAVA_OPTS \
 -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" -classpath "$CLASSPATH" \
@@ -230,7 +231,7 @@ function status()
    elif [ "$RETVAL" -eq "1" ]; then
       echo "PID file exists, but process is not running"
    else 
-      pid="$(/usr/bin/pgrep -d , -u ${TOMCAT_USER} -G ${TOMCAT_USER} java)"
+      pid="$(/usr/bin/pgrep -d , -u ${TOMCAT_USER} -G ${TOMCAT_GROUP} java)"
       if [ -z "$pid" ]; then
 	  echo "${NAME} is stopped"
 	  RETVAL="0"

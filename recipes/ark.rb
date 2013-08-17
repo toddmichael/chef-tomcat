@@ -33,6 +33,7 @@ user node['tomcat']['user']
 
 directory "/usr/local/tomcat" do
   owner node['tomcat']['user']
+  mode 00750
 end
 
 ark tomcat_version do
@@ -50,7 +51,11 @@ init_script = template tomcat_version do
   owner "root"
   group "root"
   mode "0774"
-  variables( :name => tomcat_version)
+  variables(
+    :name => tomcat_version,
+    :user => node["tomcat"]["user"],
+    :group => node["tomcat"]["group"]
+  )
 end
 
 service tomcat_version do
