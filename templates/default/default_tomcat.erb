@@ -12,18 +12,18 @@ CATALINA_HOME=<%= @tomcat["home"] %>
 CATALINA_BASE=<%= @tomcat["base"] %>
 CATALINA_PID="/var/run/<%= @tomcat["pid_file"] %>"
 
-JAVA_OPTS="<%= @tomcat['jvm_opts'].join(' ') + 
- @tomcat['jmx_opts'].join(' ') +  " " +
+JAVA_OPTS="<%= @tomcat['jvm_opts'].join(' ') + " " +
  @tomcat['webapp_opts'].join(' ') + " " +
  @tomcat['more_opts'].join(' ') %>"
+
+JMX_OPTS="<%= @tomcat['jmx_opts'].join(' ') %>"
 
 <% unless @tomcat.has_key?("jmx_password") -%>
 JMX_OPTS=$JMX_OPTS" <%= "-Dcom.sun.management.jmxremote.access.file=#{@tomcat["jmx_access_file"]} " %> "
 JMX_OPTS=$JMX_OPTS" <%= "-Dcom.sun.management.jmxremote.password.file=#{@tomcat["jmx_password_file"]} " %> "
 <% end -%>
 
-
-<% if  @tomcat['env'] -%>
+<% if @tomcat['env'] -%>
 <% @tomcat['env'].each do |envvar| -%>
 export <%= envvar %>
 <% end -%>
@@ -35,4 +35,3 @@ JAVA_ENDORSED_DIRS="$CATALINA_HOME/endorsed"
 TOMCAT6_SECURITY=<%= @tomcat["use_security_manager"] ? "yes" : "no" %>
 
 CATALINA_TMPDIR=<%= @tomcat["tmp_dir"] %>
-
