@@ -31,16 +31,16 @@ end
 
 user node['tomcat']['user']
 
-directory "/usr/local/tomcat" do
+directory node['tomcat']['instance_dir'] do
   owner node['tomcat']['user']
-  mode 00750
+  mode 00755
 end
 
 ark tomcat_version do
   url node['tomcat'][version]['url']
   checksum node['tomcat'][version]['checksum']
   version node['tomcat']['version']
-  path  "/usr/local/tomcat"
+  prefix_root node['tomcat']['prefix_dir']
   home_dir node['tomcat']['home']
   owner node['tomcat']['user']
 end
