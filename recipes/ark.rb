@@ -36,7 +36,7 @@ directory node['tomcat']['instance_dir'] do
   mode 00755
 end
 
-ark tomcat_version do
+ark 'tomcat' do
   url node['tomcat'][version]['url']
   checksum node['tomcat'][version]['checksum']
   version node['tomcat']['version']
